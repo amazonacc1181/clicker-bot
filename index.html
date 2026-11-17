@@ -82,7 +82,7 @@ main{width:min(920px,calc(100% - 32px));margin:48px auto 70px}.top{display:flex;
       '<style>' +
       ':host{all:initial;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#eef4ff}' +
       '*{box-sizing:border-box} .panel{width:min(340px,calc(100vw - 28px));background:#101b2c;color:#eef4ff;border:1px solid #435675;border-radius:15px;box-shadow:0 12px 40px #0008;overflow:hidden;font:13px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}' +
-      '.head{display:flex;align-items:center;gap:8px;padding:12px 13px;background:#1a2a43;font-weight:800;letter-spacing:.04em}.head button{margin-left:auto}.head button+button{margin-left:0}' +
+      '.head{display:flex;align-items:center;gap:8px;padding:12px 13px;background:#1a2a43;font-weight:800;letter-spacing:.04em}.head button{margin-left:auto}.head button+button{margin-left:0}.head #minimize{min-width:54px;padding:9px 12px;background:#77aaff;color:#071427;border:1px solid #d7e7ff;font-size:12px;font-weight:900;letter-spacing:.05em}.head #hide{min-width:36px;padding:9px 11px}' +
       '.panel.minimized{width:56px;height:56px;border-radius:50%}.panel.minimized .head{width:56px;height:56px;padding:0;justify-content:center;border-radius:50%}.panel.minimized .brand,.panel.minimized .body,.panel.minimized #hide{display:none}.panel.minimized #minimize{width:42px;height:42px;margin:0;border-radius:50%;font-size:19px;padding:0}' +
       '.body{padding:13px}.target{padding:9px;background:#0a1423;border:1px solid #30425d;border-radius:8px;color:#c7d8f2;overflow-wrap:anywhere;margin:5px 0 11px;max-height:58px;overflow:auto}' +
       'label{display:block;font-size:12px;color:#c1cde0;font-weight:700;margin:9px 0 5px}input{width:100%;padding:9px;border-radius:8px;background:#091322;border:1px solid #354865;color:white;font:inherit}' +
@@ -91,7 +91,7 @@ main{width:min(920px,calc(100% - 32px));margin:48px auto 70px}.top{display:flex;
       '.stats{display:flex;justify-content:space-between;gap:8px;color:#b8c6da;margin-top:12px;font-size:12px}.msg{margin-top:9px;color:#82e1ae;min-height:18px}.small{font-size:11px;color:#91a2bb;margin-top:10px}' +
       '</style>' +
       '<div class="panel" id="panel" role="region" aria-label="Auto clicker controls">' +
-      '<div class="head"><span class="brand">⌁ AUTO CLICKER</span><button class="alt" id="minimize" title="Minimize" aria-label="Minimize">—</button><button class="alt" id="hide" title="Close">✕</button></div>' +
+      '<div class="head"><span class="brand">⌁ AUTO CLICKER</span><button id="minimize" title="Minimize" aria-label="Minimize">MIN</button><button class="alt" id="hide" title="Close">✕</button></div>' +
       '<div class="body">' +
       '<div style="font-weight:700">Selected page element</div><div class="target" id="target">No button selected</div>' +
       '<button id="pick" style="width:100%">Pick button on page</button>' +
@@ -136,7 +136,7 @@ main{width:min(920px,calc(100% - 32px));margin:48px auto 70px}.top{display:flex;
     function setMinimized(value){
       const minimized = !!value;
       el('panel').classList.toggle('minimized', minimized);
-      el('minimize').textContent = minimized ? '↗' : '—';
+      el('minimize').textContent = minimized ? 'OPEN' : 'MIN';
       el('minimize').title = minimized ? 'Restore controls' : 'Minimize';
       el('minimize').setAttribute('aria-label', minimized ? 'Restore controls' : 'Minimize');
     }
