@@ -73,7 +73,7 @@ main{width:min(920px,calc(100% - 32px));margin:48px auto 70px}.top{display:flex;
   function runClicker(){
     // Change interval defaults and allowed range here; the UI, validation and timer share this config.
     const INTERVAL_CONFIG = Object.freeze({
-      minMs: 1,
+      minMs: 0.00001,
       maxMs: 60000,
       defaultMs: 1000,
       stepMs: 1
