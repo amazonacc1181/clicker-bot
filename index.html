@@ -48,26 +48,6 @@ main{width:min(920px,calc(100% - 32px));margin:48px auto 70px}.top{display:flex;
   </section>
 
   <section class="card">
-    <h2>Educational interval benchmark — local only</h2>
-    <p class="hint">Test how quickly this browser can schedule local JavaScript timer callbacks. This benchmark does not click the selected website, send network requests, or interact with PanchayatDate.com.</p>
-    <div class="grid">
-      <div class="field">
-        <label for="benchInterval">Requested timer delay (milliseconds)</label>
-        <input class="input" id="benchInterval" type="number" min="0.000001" max="60000" step="0.000001" value="0.000001">
-      </div>
-      <div class="field">
-        <label for="benchDuration">Test duration (seconds, 1–5)</label>
-        <input class="input" id="benchDuration" type="number" min="1" max="5" step="1" value="2">
-      </div>
-    </div>
-    <div class="inputrow">
-      <button class="btn green" id="runBenchmark">Run local benchmark</button>
-      <button class="btn secondary" id="stopBenchmark" disabled>Stop test</button>
-    </div>
-    <div class="notice" id="benchResult" aria-live="polite">Ready. The benchmark measures timer callbacks only; it does not perform clicks.</div>
-  </section>
-
-  <section class="card">
     <h2>How the on-page clicker works</h2>
     <p class="hint">After launching the bookmarklet on a website, use the floating control panel:</p>
     <div class="steps">
@@ -222,63 +202,6 @@ main{width:min(920px,calc(100% - 32px));margin:48px auto 70px}.top{display:flex;
     function keyHandler(event){ if(event.key === 'Escape'){ stop('Stopped with Escape.'); picking = false; document.removeEventListener('click', pickHandler, true); } }
     document.addEventListener('keydown', keyHandler, true);
   }
-  // Local educational benchmark: timer callbacks only, no page clicks or network activity.
-  let benchmarkTimer = null;
-  let benchmarkCount = 0;
-  let benchmarkStartedAt = 0;
-  let benchmarkDeadline = 0;
-  let benchmarkRequestedDelay = 0;
-
-  function endBenchmark(wasStopped){
-    if(benchmarkTimer !== null){ clearTimeout(benchmarkTimer); benchmarkTimer = null; }
-    const elapsedMs = Math.max(0.01, performance.now() - benchmarkStartedAt);
-    const measuredRate = benchmarkCount / (elapsedMs / 1000);
-    const requestedRate = 1000 / benchmarkRequestedDelay;
-    const averageDelay = benchmarkCount ? elapsedMs / benchmarkCount : 0;
-    const result = $('benchResult');
-    result.textContent =
-      (wasStopped ? 'Test stopped. ' : 'Test complete. ') +
-      'Requested delay: ' + benchmarkRequestedDelay + ' ms. ' +
-      'Theoretical requested rate: ' + requestedRate.toLocaleString(undefined,{maximumFractionDigits:2}) + ' callbacks/s. ' +
-      'Measured: ' + measuredRate.toLocaleString(undefined,{maximumFractionDigits:2}) + ' callbacks/s across ' +
-      benchmarkCount.toLocaleString() + ' callbacks. Average measured time per callback: ' +
-      averageDelay.toFixed(4) + ' ms. Actual browser scheduling is limited by the browser, device and system load.';
-    $('runBenchmark').disabled = false;
-    $('stopBenchmark').disabled = true;
-  }
-
-  function benchmarkTick(){
-    benchmarkCount++;
-    if(performance.now() >= benchmarkDeadline){ endBenchmark(false); return; }
-    benchmarkTimer = setTimeout(benchmarkTick, benchmarkRequestedDelay);
-  }
-
-  $('runBenchmark').addEventListener('click', function(){
-    if(benchmarkTimer !== null) clearTimeout(benchmarkTimer);
-    const delay = Number($('benchInterval').value);
-    const duration = Number($('benchDuration').value);
-    if(!Number.isFinite(delay) || delay < 0.000001 || delay > 60000){
-      $('benchResult').textContent = 'Enter a timer delay from 0.000001 to 60000 milliseconds.';
-      return;
-    }
-    if(!Number.isInteger(duration) || duration < 1 || duration > 5){
-      $('benchResult').textContent = 'Choose a test duration from 1 to 5 seconds.';
-      return;
-    }
-    benchmarkRequestedDelay = delay;
-    benchmarkCount = 0;
-    benchmarkStartedAt = performance.now();
-    benchmarkDeadline = benchmarkStartedAt + duration * 1000;
-    $('runBenchmark').disabled = true;
-    $('stopBenchmark').disabled = false;
-    $('benchResult').textContent = 'Running a local timer test for ' + duration + ' second(s)…';
-    benchmarkTimer = setTimeout(benchmarkTick, benchmarkRequestedDelay);
-  });
-
-  $('stopBenchmark').addEventListener('click', function(){
-    if(benchmarkTimer !== null) endBenchmark(true);
-  });
-
   $('generate').addEventListener('click', function(){
     output.value = 'javascript:(' + runClicker.toString() + ')()';
     copy.disabled = false;
