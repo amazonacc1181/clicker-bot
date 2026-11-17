@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101827">
+<title>Clicker Bot — Auto Clicker</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1220;--panel:#131e30;--panel2:#19263b;--line:#2b3a52;--text:#eef4ff;--muted:#a8b6cc;--blue:#76a9ff;--green:#68d6a1;--red:#ff7f86}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% 0%,#172d4b 0,transparent 42%),var(--bg);color:var(--text);font:15px/1.55 Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+main{width:min(920px,calc(100% - 32px));margin:48px auto 70px}.top{display:flex;align-items:center;gap:14px;margin-bottom:28px}.logo{width:48px;height:48px;border-radius:15px;background:#20385d;display:grid;place-items:center;font-size:25px}.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);font-weight:800}.title{font-size:clamp(30px,6vw,46px);line-height:1.08;letter-spacing:-.04em;margin:4px 0 8px}.sub{color:var(--muted);max-width:650px;margin:0}.card{background:linear-gradient(145deg,rgba(23,36,57,.97),rgba(17,27,43,.97));border:1px solid var(--line);border-radius:20px;padding:24px;margin-top:18px;box-shadow:0 18px 50px #0002}.card h2{font-size:19px;margin:0 0 5px}.hint{color:var(--muted);font-size:13px;margin:0 0 17px}.field{display:grid;gap:7px;margin:14px 0}.field label{font-weight:700;font-size:13px;color:#dce7fa}.inputrow{display:flex;gap:9px}.input,textarea{width:100%;min-width:0;background:#0b1423;border:1px solid #34445e;border-radius:11px;color:var(--text);padding:12px 13px;font:inherit;outline:none}.input:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px #76a9ff22}.btn{border:0;border-radius:11px;padding:12px 16px;font:700 14px inherit;cursor:pointer;white-space:nowrap;background:var(--blue);color:#081323}.btn.secondary{background:#263852;color:var(--text);border:1px solid #3a4c67}.btn.green{background:var(--green);color:#082117}.btn:active{transform:translateY(1px)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:15px}.step{background:#0e1929;border:1px solid #293a52;border-radius:14px;padding:15px}.num{font-size:12px;font-weight:800;color:var(--blue)}.step b{display:block;margin:5px 0}.step p{color:var(--muted);font-size:13px;margin:0}.codebox{min-height:112px;resize:vertical;font:12px/1.5 ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere}.notice{border-left:3px solid #e4b65b;background:#382d1b66;padding:13px 15px;border-radius:0 12px 12px 0;color:#f0dfbd;font-size:13px;margin-top:17px}.success{color:var(--green);min-height:22px;font-size:13px;margin-top:8px}.footer{color:#8090a8;text-align:center;font-size:12px;margin:28px 0}.pill{display:inline-block;border:1px solid #3b587e;border-radius:99px;color:#bcd4ff;padding:3px 9px;font-size:11px;font-weight:800;letter-spacing:.08em}@media(max-width:650px){main{margin:26px auto 48px}.card{padding:18px}.inputrow{flex-direction:column}.steps,.grid{grid-template-columns:1fr}.btn{width:100%}}
+</style>
+</head>
+<body>
+<main>
+  <header class="top">
+    <div class="logo" aria-hidden="true">⌁</div>
+    <div><div class="eyebrow">Browser utility</div><div style="font-weight:800;font-size:18px">CLICKER BOT</div></div>
+    <span class="pill" style="margin-left:auto">GITHUB PAGES</span>
+  </header>
+  <h1 class="title">Repeat a button click.<br><span style="color:var(--blue)">On your own terms.</span></h1>
+  <p class="sub">A lightweight bookmarklet-based auto clicker. Open the website you want to use, activate the bookmarklet, choose a button, and control the repeat interval.</p>
+
+  <section class="card">
+    <h2>1. Choose your website</h2>
+    <p class="hint">This opens the site in a separate tab. The clicker is activated on that tab using a bookmarklet.</p>
+    <div class="field">
+      <label for="siteUrl">Website address</label>
+      <div class="inputrow"><input class="input" id="siteUrl" type="url" value="https://panchayatdate.com" placeholder="https://example.com"><button class="btn" id="openSite">Open website ↗</button></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>2. Create your Auto Clicker bookmark</h2>
+    <p class="hint">Generate the bookmarklet, then save it as a browser bookmark. It runs on the active website tab, so it does not depend on the site allowing iframe embedding.</p>
+    <button class="btn green" id="generate">Generate bookmarklet</button>
+    <div class="field">
+      <label for="bookmarklet">Bookmark URL (copy the entire line)</label>
+      <textarea class="codebox" id="bookmarklet" readonly placeholder="Tap Generate bookmarklet to create your personal bookmarklet."></textarea>
+      <div class="inputrow"><button class="btn secondary" id="copy" disabled>Copy bookmarklet</button><span id="copyStatus" class="success" aria-live="polite"></span></div>
+    </div>
+    <div class="steps">
+      <div class="step"><span class="num">STEP 01</span><b>Save a bookmark</b><p>Bookmark any page and name it “Clicker Bot”.</p></div>
+      <div class="step"><span class="num">STEP 02</span><b>Edit its address</b><p>Edit that bookmark and replace its URL with the copied bookmarklet text, including <code>javascript:</code>.</p></div>
+      <div class="step"><span class="num">STEP 03</span><b>Run on the target tab</b><p>Open your target website and tap the “Clicker Bot” bookmark to show the control panel.</p></div>
+    </div>
+    <div class="notice"><b>Browser note:</b> Bookmarklets are best supported in desktop Chrome/Edge. Some mobile browsers block JavaScript bookmarks or remove the <code>javascript:</code> prefix when saving. The GitHub Pages dashboard itself cannot directly control a different tab; the bookmarklet is the part that runs on the target page.</div>
+  </section>
+
+  <section class="card">
+    <h2>How the on-page clicker works</h2>
+    <p class="hint">After launching the bookmarklet on a website, use the floating control panel:</p>
+    <div class="steps">
+      <div class="step"><span class="num">A</span><b>Select button</b><p>Press “Pick button”, then click the page element you want to repeat.</p></div>
+      <div class="step"><span class="num">B</span><b>Set interval</b><p>Choose a delay of at least 100 ms and an optional click limit.</p></div>
+      <div class="step"><span class="num">C</span><b>Start / stop</b><p>Start, pause or stop. Press Escape to stop immediately.</p></div>
+    </div>
+    <div class="notice">The clicker uses the page's JavaScript click event. It cannot create a trusted physical tap, bypass CAPTCHAs, defeat site protections, or guarantee success on pages that reject automated events. Use it only where automated clicking is permitted.</div>
+  </section>
+  <p class="footer">Clicker Bot · Static HTML · No account or server required</p>
+</main>
+<script>
+(function(){
+  const $ = (id) => document.getElementById(id);
+  const site = $('siteUrl'), output = $('bookmarklet'), copy = $('copy'), status = $('copyStatus');
+  $('openSite').addEventListener('click', function(){
+    let value = site.value.trim();
+    if(!/^https?:\/\//i.test(value)) value = 'https://' + value;
+    try { const u = new URL(value); if(u.protocol !== 'http:' && u.protocol !== 'https:') throw new Error(); window.open(u.href,'_blank','noopener'); }
+    catch(e){ status.textContent = 'Enter a valid http or https website address.'; }
+  });
+
+  function runClicker(){
+    const existing = document.getElementById('__clicker_bot_host__');
+    if(existing){ existing.remove(); return; }
+    const host = document.createElement('div');
+    host.id = '__clicker_bot_host__';
+    host.style.cssText = 'all:initial;position:fixed;z-index:2147483647;top:14px;right:14px;';
+    (document.documentElement || document.body).appendChild(host);
+    const root = host.attachShadow({mode:'open'});
+    root.innerHTML =
+      '<style>' +
+      ':host{all:initial;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#eef4ff}' +
+      '*{box-sizing:border-box} .panel{width:min(340px,calc(100vw - 28px));background:#101b2c;color:#eef4ff;border:1px solid #435675;border-radius:15px;box-shadow:0 12px 40px #0008;overflow:hidden;font:13px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}' +
+      '.head{display:flex;align-items:center;gap:8px;padding:12px 13px;background:#1a2a43;font-weight:800;letter-spacing:.04em}.head button{margin-left:auto}' +
+      '.body{padding:13px}.target{padding:9px;background:#0a1423;border:1px solid #30425d;border-radius:8px;color:#c7d8f2;overflow-wrap:anywhere;margin:5px 0 11px;max-height:58px;overflow:auto}' +
+      'label{display:block;font-size:12px;color:#c1cde0;font-weight:700;margin:9px 0 5px}input{width:100%;padding:9px;border-radius:8px;background:#091322;border:1px solid #354865;color:white;font:inherit}' +
+      '.row{display:grid;grid-template-columns:1fr 1fr;gap:9px}.actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:12px}' +
+      'button{border:0;border-radius:8px;padding:9px 10px;background:#77aaff;color:#071427;font-weight:800;font-size:12px;cursor:pointer}button.alt{background:#293c58;color:#f1f6ff}button.stop{background:#70343d;color:#fff}' +
+      '.stats{display:flex;justify-content:space-between;gap:8px;color:#b8c6da;margin-top:12px;font-size:12px}.msg{margin-top:9px;color:#82e1ae;min-height:18px}.small{font-size:11px;color:#91a2bb;margin-top:10px}' +
+      '</style>' +
+      '<div class="panel" role="region" aria-label="Auto clicker controls">' +
+      '<div class="head"><span>⌁ AUTO CLICKER</span><button class="alt" id="hide" title="Close">✕</button></div>' +
+      '<div class="body">' +
+      '<div style="font-weight:700">Selected page element</div><div class="target" id="target">No button selected</div>' +
+      '<button id="pick" style="width:100%">Pick button on page</button>' +
+      '<div class="row"><div><label for="interval">Interval (ms)</label><input id="interval" type="number" min="100" max="60000" step="100" value="1000"></div>' +
+      '<div><label for="limit">Max clicks (0 = unlimited)</label><input id="limit" type="number" min="0" step="1" value="0"></div></div>' +
+      '<div class="actions"><button id="start">Start</button><button class="alt" id="pause">Pause</button><button class="stop" id="stop">Stop</button></div>' +
+      '<div class="stats"><span>Clicks: <b id="count">0</b></span><span>Status: <b id="state">Ready</b></span></div>' +
+      '<div class="msg" id="msg" aria-live="polite">Pick a button to begin.</div>' +
+      '<div class="small">Tip: Press Escape to stop. Close ✕ to remove this panel.</div>' +
+      '</div></div>';
+
+    const el = (id) => root.getElementById(id);
+    let selector = '', total = 0, timer = null, active = false, paused = false, picking = false;
+    function describe(node){
+      if(!node) return 'No button selected';
+      let s = node.tagName.toLowerCase();
+      if(node.id) s += '#' + node.id;
+      if(node.classList && node.classList.length) s += '.' + Array.from(node.classList).slice(0,2).join('.');
+      const label = (node.innerText || node.getAttribute('aria-label') || node.getAttribute('title') || '').trim().replace(/\s+/g,' ').slice(0,42);
+      return s + (label ? ' — ' + label : '');
+    }
+    function makeSelector(node){
+      if(node.id) return '#' + CSS.escape(node.id);
+      const parts = [];
+      let current = node;
+      while(current && current.nodeType === 1 && current !== document.documentElement && parts.length < 7){
+        let part = current.localName;
+        if(current.classList && current.classList.length){
+          part += '.' + Array.from(current.classList).slice(0,2).map(c => CSS.escape(c)).join('.');
+        }
+        const parent = current.parentElement;
+        if(parent){
+          const same = Array.from(parent.children).filter(x => x.localName === current.localName);
+          if(same.length > 1) part += ':nth-of-type(' + (same.indexOf(current) + 1) + ')';
+        }
+        parts.unshift(part);
+        current = parent;
+      }
+      return parts.join(' > ');
+    }
+    function setMessage(message, state){ el('msg').textContent = message; if(state) el('state').textContent = state; }
+    function clearTimer(){ if(timer !== null){ clearTimeout(timer); timer = null; } }
+    function stop(message){
+      active = false; paused = false; clearTimer();
+      el('state').textContent = 'Stopped';
+      el('start').textContent = 'Start';
+      setMessage(message || 'Stopped.', 'Stopped');
+    }
+    function clickOnce(){
+      if(!active) return;
+      let target = null;
+      try { target = selector ? document.querySelector(selector) : null; } catch(e){}
+      if(!target || !target.isConnected){ stop('Target button is no longer on the page. Pick it again.'); return; }
+      try { target.click(); total++; el('count').textContent = String(total); }
+      catch(e){ stop('The page did not accept the click: ' + e.message); return; }
+      const limit = Math.max(0, Number(el('limit').value) || 0);
+      if(limit > 0 && total >= limit){ stop('Click limit reached.'); return; }
+      const delay = Math.max(100, Math.min(60000, Number(el('interval').value) || 1000));
+      timer = setTimeout(clickOnce, delay);
+    }
+    function pickHandler(event){
+      if(!picking) return;
+      if(event.composedPath && event.composedPath().includes(host)) return;
+      const node = event.target && event.target.nodeType === 1 ? event.target : event.target && event.target.parentElement;
+      if(!node || node === document.documentElement || node === document.body) return;
+      event.preventDefault(); event.stopPropagation(); event.stopImmediatePropagation();
+      selector = makeSelector(node);
+      el('target').textContent = describe(node) + ' | ' + selector;
+      picking = false; el('pick').textContent = 'Pick another button';
+      setMessage('Button selected. Set interval and press Start.', 'Ready');
+      document.removeEventListener('click', pickHandler, true);
+    }
+    el('pick').addEventListener('click', function(){
+      if(active) stop('Stopped so you can choose a new target.');
+      picking = true; el('pick').textContent = 'Now click the target on the page…';
+      setMessage('Click the button or element you want to repeat. That one selection click is cancelled.', 'Picking');
+      document.addEventListener('click', pickHandler, true);
+    });
+    el('start').addEventListener('click', function(){
+      if(!selector){ setMessage('Pick a button first.', 'Ready'); return; }
+      if(active) return;
+      const delay = Number(el('interval').value);
+      if(!Number.isFinite(delay) || delay < 100 || delay > 60000){ setMessage('Interval must be between 100 and 60000 ms.', 'Ready'); return; }
+      active = true; paused = false; el('start').textContent = 'Running';
+      setMessage('Auto clicking. Use Pause or Stop at any time.', 'Running');
+      clickOnce();
+    });
+    el('pause').addEventListener('click', function(){
+      if(!active){ if(paused){ active = true; paused = false; el('start').textContent = 'Running'; setMessage('Resumed.', 'Running'); clickOnce(); } return; }
+      active = false; paused = true; clearTimer(); el('start').textContent = 'Resume'; setMessage('Paused.', 'Paused');
+    });
+    el('stop').addEventListener('click', function(){ stop('Stopped by user.'); });
+    el('hide').addEventListener('click', function(){
+      stop('Closed.'); document.removeEventListener('click', pickHandler, true);
+      document.removeEventListener('keydown', keyHandler, true); host.remove();
+    });
+    function keyHandler(event){ if(event.key === 'Escape'){ stop('Stopped with Escape.'); picking = false; document.removeEventListener('click', pickHandler, true); } }
+    document.addEventListener('keydown', keyHandler, true);
+  }
+  $('generate').addEventListener('click', function(){
+    output.value = 'javascript:(' + runClicker.toString() + ')()';
+    copy.disabled = false;
+    status.textContent = 'Bookmarklet generated. Copy it and save it as a bookmark URL.';
+  });
+  copy.addEventListener('click', async function(){
+    if(!output.value) return;
+    try { await navigator.clipboard.writeText(output.value); status.textContent = 'Copied. Paste it into your bookmark URL.'; }
+    catch(e){ output.focus(); output.select(); status.textContent = 'Text selected. Use Copy from your browser menu.'; }
+  });
+})();
+</script>
+</body>
+</html>
